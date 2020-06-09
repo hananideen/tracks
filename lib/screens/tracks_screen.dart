@@ -18,7 +18,7 @@ class _TracksScreenState extends State<TracksScreen> {
   }
 
   void getTrackListData() async {
-    var data = await TracksModel().getTrackList();
+    var data = await TracksService().getTrackList();
 
     Tracks tracks = new Tracks.fromJson(data);
 
@@ -52,7 +52,8 @@ class _TracksScreenState extends State<TracksScreen> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => DetailScreen(),
+                            builder: (context) =>
+                                DetailScreen(id: trackList[index].id),
                           ));
                     },
                   );
