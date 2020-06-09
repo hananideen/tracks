@@ -27,12 +27,50 @@ class _TracksScreenState extends State<TracksScreen> {
     });
   }
 
+  void getTrackListByGenre(String genre) async {
+    var data = await TracksService().getTrackListByGenre(genre);
+
+    Tracks tracks = new Tracks.fromJson(data);
+
+    setState(() {
+      trackList = tracks.tracks;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
       body: Column(
         children: <Widget>[
+          Row(
+            children: <Widget>[
+              FlatButton(
+                onPressed: () {
+                  getTrackListByGenre('pop');
+                },
+                child: Text('Pop'),
+              ),
+              FlatButton(
+                onPressed: () {
+                  getTrackListByGenre('rock');
+                },
+                child: Text('Rock'),
+              ),
+              FlatButton(
+                onPressed: () {
+                  getTrackListByGenre('hip hop');
+                },
+                child: Text('Hip Hop'),
+              ),
+              FlatButton(
+                onPressed: () {
+                  getTrackListByGenre('country');
+                },
+                child: Text('Country'),
+              ),
+            ],
+          ),
           Expanded(
             child: ListView.separated(
                 padding: const EdgeInsets.all(8.0),
