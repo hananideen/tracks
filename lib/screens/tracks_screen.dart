@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tracks/model/track.dart';
+import 'package:tracks/screens/detail_screen.dart';
 import 'package:tracks/services/tracks_service.dart';
 
 class TracksScreen extends StatefulWidget {
@@ -32,7 +33,31 @@ class _TracksScreenState extends State<TracksScreen> {
       appBar: AppBar(),
       body: Column(
         children: <Widget>[
-          Text(trackList[0].genres[0]),
+          Expanded(
+            child: ListView.separated(
+                padding: const EdgeInsets.all(8.0),
+                shrinkWrap: true,
+                itemCount: trackList.length,
+                separatorBuilder: (BuildContext context, int index) =>
+                    const Divider(),
+                itemBuilder: (BuildContext context, int index) {
+                  return ListTile(
+                    title: Text(trackList[index].title),
+                    subtitle: Text(trackList[index].artist),
+                    leading: CircleAvatar(
+                      backgroundImage: NetworkImage(trackList[index].images),
+                    ),
+                    trailing: Text(trackList[index].runtime.toString()),
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => DetailScreen(),
+                          ));
+                    },
+                  );
+                }),
+          ),
         ],
       ),
     );
