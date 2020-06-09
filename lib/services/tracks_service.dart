@@ -16,4 +16,11 @@ class TracksService {
     var trackData = await networkHelper.getData();
     return trackData;
   }
+
+  Future<dynamic> getTrackListByGenre(String genre) async {
+    NetworkHelper networkHelper = NetworkHelper('$apiURL.json?genres=$genre');
+
+    var trackData = await networkHelper.getData();
+    return trackData;
+  }
 }
