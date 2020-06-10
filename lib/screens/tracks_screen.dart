@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:tracks/components/filter_button.dart';
 import 'package:tracks/model/track.dart';
 import 'package:tracks/screens/detail_screen.dart';
 import 'package:tracks/services/tracks_service.dart';
+
+enum Genre { pop, rock, hiphop, country, all }
+
+const kActiveFilterColour = Colors.pinkAccent;
+const kInactiveFilterColour = Color(0xFF1D1E33);
 
 class TracksScreen extends StatefulWidget {
   @override
@@ -12,6 +18,7 @@ class _TracksScreenState extends State<TracksScreen> {
   List<Track> trackList;
   bool isInit = true;
   bool isLoading = false;
+  Genre selectedGenre;
 
   @override
   void initState() {
@@ -27,6 +34,7 @@ class _TracksScreenState extends State<TracksScreen> {
     setState(() {
       trackList = tracks.tracks;
       isInit = false;
+      isLoading = false;
     });
   }
 
@@ -41,59 +49,88 @@ class _TracksScreenState extends State<TracksScreen> {
     });
   }
 
+  void onFilter(Genre genre, String filter) {
+    setState(() {
+      isLoading = true;
+      if (selectedGenre == genre) {
+        selectedGenre = Genre.all;
+        getTrackListData();
+      } else {
+        selectedGenre = genre;
+        getTrackListByGenre(filter);
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Track List'),
+        actions: <Widget>[
+          Container(
+            width: 25.0,
+            height: 25.0,
+            child: Visibility(
+                visible: isLoading, child: CircularProgressIndicator()),
+          ),
+        ],
       ),
       body: Center(
         child: isInit
             ? CircularProgressIndicator()
             : Column(
                 children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      FlatButton(
-                        onPressed: () {
-                          setState(() {
-                            isLoading = true;
-                            getTrackListByGenre('pop');
-                          });
-                        },
-                        child: Text('Pop'),
-                      ),
-                      FlatButton(
-                        onPressed: () {
-                          setState(() {
-                            isLoading = true;
-                            getTrackListByGenre('rock');
-                          });
-                        },
-                        child: Text('Rock'),
-                      ),
-                      FlatButton(
-                        onPressed: () {
-                          setState(() {
-                            isLoading = true;
-                            getTrackListByGenre('hip hop');
-                          });
-                        },
-                        child: Text('Hip Hop'),
-                      ),
-                      FlatButton(
-                        onPressed: () {
-                          setState(() {
-                            isLoading = true;
-                            getTrackListByGenre('country');
-                          });
-                        },
-                        child: Text('Country'),
-                      ),
-                      Visibility(
-                          visible: isLoading,
-                          child: CircularProgressIndicator()),
-                    ],
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 16.0),
+                    child: Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: FilterButton(
+                            colour: selectedGenre == Genre.pop
+                                ? kActiveFilterColour
+                                : kInactiveFilterColour,
+                            onPress: () {
+                              onFilter(Genre.pop, 'pop');
+                            },
+                            title: 'Pop',
+                          ),
+                        ),
+                        Expanded(
+                          child: FilterButton(
+                            colour: selectedGenre == Genre.rock
+                                ? kActiveFilterColour
+                                : kInactiveFilterColour,
+                            onPress: () {
+                              onFilter(Genre.rock, 'rock');
+                            },
+                            title: 'Rock',
+                          ),
+                        ),
+                        Expanded(
+                          child: FilterButton(
+                            colour: selectedGenre == Genre.hiphop
+                                ? kActiveFilterColour
+                                : kInactiveFilterColour,
+                            onPress: () {
+                              onFilter(Genre.hiphop, 'hip hop');
+                            },
+                            title: 'Hip Hop',
+                          ),
+                        ),
+                        Expanded(
+                          child: FilterButton(
+                            colour: selectedGenre == Genre.country
+                                ? kActiveFilterColour
+                                : kInactiveFilterColour,
+                            onPress: () {
+                              onFilter(Genre.country, 'country');
+                            },
+                            title: 'Country',
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                   Expanded(
                     child: ListView.separated(
