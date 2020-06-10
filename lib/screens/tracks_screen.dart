@@ -10,6 +10,8 @@ class TracksScreen extends StatefulWidget {
 
 class _TracksScreenState extends State<TracksScreen> {
   List<Track> trackList;
+  bool isInit = true;
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -24,6 +26,7 @@ class _TracksScreenState extends State<TracksScreen> {
 
     setState(() {
       trackList = tracks.tracks;
+      isInit = false;
     });
   }
 
@@ -34,6 +37,7 @@ class _TracksScreenState extends State<TracksScreen> {
 
     setState(() {
       trackList = tracks.tracks;
+      isLoading = false;
     });
   }
 
@@ -41,63 +45,84 @@ class _TracksScreenState extends State<TracksScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: Column(
-        children: <Widget>[
-          Row(
-            children: <Widget>[
-              FlatButton(
-                onPressed: () {
-                  getTrackListByGenre('pop');
-                },
-                child: Text('Pop'),
+      body: Center(
+        child: isInit
+            ? CircularProgressIndicator()
+            : Column(
+                children: <Widget>[
+                  Row(
+                    children: <Widget>[
+                      FlatButton(
+                        onPressed: () {
+                          setState(() {
+                            isLoading = true;
+                            getTrackListByGenre('pop');
+                          });
+                        },
+                        child: Text('Pop'),
+                      ),
+                      FlatButton(
+                        onPressed: () {
+                          setState(() {
+                            isLoading = true;
+                            getTrackListByGenre('rock');
+                          });
+                        },
+                        child: Text('Rock'),
+                      ),
+                      FlatButton(
+                        onPressed: () {
+                          setState(() {
+                            isLoading = true;
+                            getTrackListByGenre('hip hop');
+                          });
+                        },
+                        child: Text('Hip Hop'),
+                      ),
+                      FlatButton(
+                        onPressed: () {
+                          setState(() {
+                            isLoading = true;
+                            getTrackListByGenre('country');
+                          });
+                        },
+                        child: Text('Country'),
+                      ),
+                      Visibility(
+                          visible: isLoading,
+                          child: CircularProgressIndicator()),
+                    ],
+                  ),
+                  Expanded(
+                    child: ListView.separated(
+                        padding: const EdgeInsets.all(8.0),
+                        shrinkWrap: true,
+                        itemCount: trackList.length,
+                        separatorBuilder: (BuildContext context, int index) =>
+                            const Divider(),
+                        itemBuilder: (BuildContext context, int index) {
+                          return ListTile(
+                            title: Text(trackList[index].title),
+                            subtitle: Text(trackList[index].artist),
+                            leading: CircleAvatar(
+                              backgroundImage:
+                                  NetworkImage(trackList[index].images),
+                              backgroundColor: Colors.transparent,
+                            ),
+                            trailing: Text(trackList[index].runtime.toString()),
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        DetailScreen(id: trackList[index].id),
+                                  ));
+                            },
+                          );
+                        }),
+                  ),
+                ],
               ),
-              FlatButton(
-                onPressed: () {
-                  getTrackListByGenre('rock');
-                },
-                child: Text('Rock'),
-              ),
-              FlatButton(
-                onPressed: () {
-                  getTrackListByGenre('hip hop');
-                },
-                child: Text('Hip Hop'),
-              ),
-              FlatButton(
-                onPressed: () {
-                  getTrackListByGenre('country');
-                },
-                child: Text('Country'),
-              ),
-            ],
-          ),
-          Expanded(
-            child: ListView.separated(
-                padding: const EdgeInsets.all(8.0),
-                shrinkWrap: true,
-                itemCount: trackList.length,
-                separatorBuilder: (BuildContext context, int index) =>
-                    const Divider(),
-                itemBuilder: (BuildContext context, int index) {
-                  return ListTile(
-                    title: Text(trackList[index].title),
-                    subtitle: Text(trackList[index].artist),
-                    leading: CircleAvatar(
-                      backgroundImage: NetworkImage(trackList[index].images),
-                    ),
-                    trailing: Text(trackList[index].runtime.toString()),
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                DetailScreen(id: trackList[index].id),
-                          ));
-                    },
-                  );
-                }),
-          ),
-        ],
       ),
     );
   }
