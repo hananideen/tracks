@@ -6,6 +6,23 @@ import 'package:tracks/services/tracks_service.dart';
 
 enum Genre { pop, rock, hiphop, country, all }
 
+extension GenreExtension on Genre {
+  String get genre {
+    switch (this) {
+      case Genre.pop:
+        return 'pop';
+      case Genre.rock:
+        return 'rock';
+      case Genre.hiphop:
+        return 'hip hop';
+      case Genre.country:
+        return 'country';
+      default:
+        return null;
+    }
+  }
+}
+
 const kActiveFilterColour = Colors.pinkAccent;
 const kInactiveFilterColour = Color(0xFF1D1E33);
 
@@ -49,7 +66,7 @@ class _TracksScreenState extends State<TracksScreen> {
     });
   }
 
-  void onFilter(Genre genre, String filter) {
+  void onFilter(Genre genre) {
     setState(() {
       isLoading = true;
       if (selectedGenre == genre) {
@@ -57,7 +74,7 @@ class _TracksScreenState extends State<TracksScreen> {
         getTrackListData();
       } else {
         selectedGenre = genre;
-        getTrackListByGenre(filter);
+        getTrackListByGenre(genre.genre);
       }
     });
   }
@@ -68,11 +85,13 @@ class _TracksScreenState extends State<TracksScreen> {
       appBar: AppBar(
         title: Text('Track List'),
         actions: <Widget>[
-          Container(
-            width: 25.0,
-            height: 25.0,
-            child: Visibility(
-                visible: isLoading, child: CircularProgressIndicator()),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Container(
+              width: 20.0,
+              child: Visibility(
+                  visible: isLoading, child: CircularProgressIndicator()),
+            ),
           ),
         ],
       ),
@@ -91,7 +110,7 @@ class _TracksScreenState extends State<TracksScreen> {
                                 ? kActiveFilterColour
                                 : kInactiveFilterColour,
                             onPress: () {
-                              onFilter(Genre.pop, 'pop');
+                              onFilter(Genre.pop);
                             },
                             title: 'Pop',
                           ),
@@ -102,7 +121,7 @@ class _TracksScreenState extends State<TracksScreen> {
                                 ? kActiveFilterColour
                                 : kInactiveFilterColour,
                             onPress: () {
-                              onFilter(Genre.rock, 'rock');
+                              onFilter(Genre.rock);
                             },
                             title: 'Rock',
                           ),
@@ -113,7 +132,7 @@ class _TracksScreenState extends State<TracksScreen> {
                                 ? kActiveFilterColour
                                 : kInactiveFilterColour,
                             onPress: () {
-                              onFilter(Genre.hiphop, 'hip hop');
+                              onFilter(Genre.hiphop);
                             },
                             title: 'Hip Hop',
                           ),
@@ -124,7 +143,7 @@ class _TracksScreenState extends State<TracksScreen> {
                                 ? kActiveFilterColour
                                 : kInactiveFilterColour,
                             onPress: () {
-                              onFilter(Genre.country, 'country');
+                              onFilter(Genre.country);
                             },
                             title: 'Country',
                           ),
