@@ -36,7 +36,9 @@ class _DetailScreenState extends State<DetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text('Track Details'),
+      ),
       body: Center(
         child: isLoading
             ? CircularProgressIndicator()
@@ -49,7 +51,7 @@ class _DetailScreenState extends State<DetailScreen> {
                   child: BackdropFilter(
                     filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
                     child: Container(
-                      color: Colors.grey.withOpacity(0.5),
+                      color: Colors.grey.withOpacity(0.7),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
@@ -68,20 +70,29 @@ class _DetailScreenState extends State<DetailScreen> {
                             children: <Widget>[
                               Text(track.title,
                                   style: TextStyle(
-                                    fontSize: 20.0,
+                                    fontSize: 25.0,
                                     fontWeight: FontWeight.w500,
+                                    color: Theme.of(context).accentColor,
                                   )),
                               SizedBox(
                                 height: 10,
                               ),
                               Text(track.artist,
                                   style: TextStyle(
+                                    fontSize: 18.0,
+                                    fontWeight: FontWeight.w500,
+                                  )),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Text(track.runtime,
+                                  style: TextStyle(
                                     fontSize: 16.0,
                                   )),
                               SizedBox(
                                 height: 10,
                               ),
-                              Text(track.genres.toString(),
+                              Text(track.getGenreAsString(track.genres),
                                   style: TextStyle(
                                     fontSize: 16.0,
                                   )),

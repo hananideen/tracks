@@ -34,7 +34,7 @@ class Track {
     var runtimeFromJson = json['runtime'];
     var minutes = ((runtimeFromJson % 3600) / 60).toInt();
     var seconds = runtimeFromJson % 60;
-    String runtime = '$minutes:$seconds';
+    String runtime = seconds < 10 ? '$minutes:0$seconds' : '$minutes:$seconds';
 
     return Track(
       id: json['id'],
@@ -44,5 +44,24 @@ class Track {
       genres: genreList,
       runtime: runtime,
     );
+  }
+
+  String getGenreAsString(List<String> genres) {
+    String genreString = '';
+
+    for (var i = 0; i < genres.length; i++) {
+      String capitalizeGenre = genres[i].capitalize();
+      genreString = i < genres.length - 1
+          ? '$genreString $capitalizeGenre,'
+          : '$genreString $capitalizeGenre';
+    }
+
+    return 'Genre: $genreString';
+  }
+}
+
+extension StringExtension on String {
+  String capitalize() {
+    return "${this[0].toUpperCase()}${this.substring(1)}";
   }
 }
