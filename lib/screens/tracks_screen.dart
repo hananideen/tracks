@@ -44,7 +44,9 @@ class _TracksScreenState extends State<TracksScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text('Track List'),
+      ),
       body: Center(
         child: isInit
             ? CircularProgressIndicator()
@@ -109,7 +111,7 @@ class _TracksScreenState extends State<TracksScreen> {
                                   NetworkImage(trackList[index].images),
                               backgroundColor: Colors.transparent,
                             ),
-                            trailing: Text(trackList[index].runtime.toString()),
+                            trailing: Text(trackList[index].runtime),
                             onTap: () {
                               Navigator.push(
                                   context,
